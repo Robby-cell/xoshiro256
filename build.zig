@@ -8,6 +8,8 @@ const @"c flags": []const []const u8 = &.{
     "-Wall",
     "-Wextra",
     "-pedantic",
+    "-fPIC",
+    "-shared",
 };
 
 pub fn build(b: *std.Build) void {
@@ -20,6 +22,7 @@ pub fn build(b: *std.Build) void {
 
         .target = target,
         .optimize = optimize,
+        .pic = true,
     });
     lib.addIncludePath(.{ .path = "include" });
 
@@ -41,6 +44,17 @@ pub fn build(b: *std.Build) void {
     exe.addIncludePath(.{ .path = "include" });
 
     b.installArtifact(exe);
+
+    const cExe = b.addExecutable(.{
+        .name = "cxoshiro",
+        .target = target,
+        .optimize = optimize,
+    });
+    cExe.addIncludePath(.{ .path = "include" });
+    cExe.addCSourceFile(.{ .file = .{ .path = "main.c" }, .flags = &.{} });
+    cExe.linkLibC();
+    cExe.linkLibrary(lib);
+    b.installArtifact(cExe);
 
     const run_cmd = b.addRunArtifact(exe);
     run_cmd.step.dependOn(b.getInstallStep());
