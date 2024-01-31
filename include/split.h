@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+uint64_t trueRandomSeed(void);
+
 uint64_t nextSplit(void);
 
 double nextFloatSplit(void);

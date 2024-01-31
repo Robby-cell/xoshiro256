@@ -5,7 +5,7 @@
 
 int main(void) {
   struct Xoshiro256 rng = { 0 };
-  seedSplit(64);
+  seedSplit(trueRandomSeed());
   seedXoshiro256(&rng, nextSplit());
 
   for (int i = 0; i < 20; ++i) {
